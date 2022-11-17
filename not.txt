@@ -1,0 +1,35 @@
+3 tane kütüphane ekledik(core,coreSql,Tools)
+google git aþagýdaki baðlantýyý kopyaladýk.
+Scaffold-DbContext "Server=.\SQLExpress;Database=Nortwind;Trusted_Connection=True;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+appsetting connectionstring ekledik
+
+{
+  "ConnectionStrings": {
+    "Baglanti": "Server=DESKTOP-4GKM6HK\\SQLEXPRESS;Database=Northwind;Trusted_Connection=True;"
+  },
+program.cs
+builder.Services.AddDbContext<NorthwindContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Baglanti")));
+ *****servis bazlýda view olmaz.*******
+ public class CategoryController : Controller
+    {
+        NorthwindContext _db;
+        public CategoryController(NorthwindContext db)
+        {
+            _db = db;
+        }
+
+        public IActionResult List()
+        {
+        
+            return (Json(_db.Set<Category>().Include(x => x.Products).ToList()));
+        }
+    }
+CategoryDTO
+    public class CategoryDTO
+    {
+        public int Id { get; set; }
+        public string ?Ad { get; set; }
+        public string ?Aciklama { get; set; }
+        public List<Product> Urunler { get; set; }
+    }
